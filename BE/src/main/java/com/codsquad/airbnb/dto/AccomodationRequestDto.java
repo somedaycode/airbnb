@@ -112,4 +112,22 @@ public class AccomodationRequestDto {
     public double getSouthWestLongitude() {
         return southWestLongitude;
     }
+
+    public boolean isBoundaryLatitude(AccomodationResponseDto responseDto) {
+        return (this.southWestLatitude <= responseDto.getLatitude()) &&
+                (responseDto.getLatitude() <= this.northEastLatitude);
+    }
+
+    public boolean isBoundaryLongitude(AccomodationResponseDto responseDto) {
+        return (this.southWestLatitude <= responseDto.getLongitude()) &&
+                (responseDto.getLongitude() <= this.northEastLatitude);
+    }
+
+    public boolean isTotalMemberCount(AccomodationResponseDto responseDto) {
+        return getTotalMemberCount() == responseDto.getMaxMemberCapacity();
+    }
+
+    private int getTotalMemberCount() {
+        return this.adults + this.children + this.infants;
+    }
 }
