@@ -120,4 +120,8 @@ public class AccomodationResponseDto {
     public double getLongitude() {
         return longitude;
     }
+
+    public int getMaxMemberCapacity() {
+        return maxMemberCapacity;
+    }
 }
