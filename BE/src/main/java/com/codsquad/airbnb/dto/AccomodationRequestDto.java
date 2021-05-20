@@ -22,10 +22,11 @@ public class AccomodationRequestDto {
     private double southWestLatitude;
     private double southWestLongitude;
 
-
     public AccomodationRequestDto(LocalDate checkInDate, LocalDate checkOutDate,
                                   int adults, int children, int infants,
-                                  int priceRangeMin, int getPriceRangeMax) {
+                                  int priceRangeMin, int getPriceRangeMax,
+                                  double northEastLatitude, double northEastLongitude,
+                                  double southWestLatitude, double southWestLongitude) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.adults = adults;
@@ -33,6 +34,10 @@ public class AccomodationRequestDto {
         this.infants = infants;
         this.priceRangeMin = priceRangeMin;
         this.getPriceRangeMax = getPriceRangeMax;
+        this.northEastLatitude = northEastLatitude;
+        this.northEastLongitude = northEastLongitude;
+        this.southWestLatitude = southWestLatitude;
+        this.southWestLongitude = southWestLongitude;
     }
 
     @JsonSetter("check_in")
@@ -78,7 +83,6 @@ public class AccomodationRequestDto {
         this.northEastLongitude = northEastLongitude;
     }
 
-
     @JsonSetter("sw_lat")
     public void setSouthWestLatitude(double southWestLatitude) {
         this.southWestLatitude = southWestLatitude;
@@ -91,5 +95,21 @@ public class AccomodationRequestDto {
 
     private LocalDate parseToLocalDate(String dateAsString) {
         return LocalDate.parse(dateAsString, DateTimeFormatter.ISO_DATE);
+    }
+
+    public double getNorthEastLatitude() {
+        return northEastLatitude;
+    }
+
+    public double getNorthEastLongitude() {
+        return northEastLongitude;
+    }
+
+    public double getSouthWestLatitude() {
+        return southWestLatitude;
+    }
+
+    public double getSouthWestLongitude() {
+        return southWestLongitude;
     }
 }
