@@ -2,6 +2,8 @@ package com.codsquad.airbnb.service;
 
 import com.codsquad.airbnb.dto.AccomodationRequestDto;
 import com.codsquad.airbnb.dto.AccomodationResponseDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,7 +13,12 @@ import java.util.stream.Collectors;
 @Service
 public class AccomodationService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccomodationService.class);
+
     public List<AccomodationResponseDto> getAccomodationResponseDtoList(AccomodationRequestDto requestDto) {
+        List<AccomodationResponseDto> responseDtoList = findByAccomodations(requestDto);
+        LOGGER.debug("AccomodationResponseDtoList : {}", responseDtoList);
+
         return findByAccomodations(requestDto);
     }
 
@@ -21,7 +28,8 @@ public class AccomodationService {
 
         return list.stream().filter(responseDto -> requestDto.isBoundaryLatitude(responseDto)
                 && requestDto.isBoundaryLongitude(responseDto)
-                && requestDto.isTotalMemberCount(responseDto))
+                && requestDto.isTotalMemberCount(responseDto)
+                && requestDto.isBoundaryPrice(responseDto))
                 .collect(Collectors.toList());
     }
 
