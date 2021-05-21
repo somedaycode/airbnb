@@ -113,6 +113,46 @@ public class AccomodationResponseDto {
         this.longitude = longitude;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getResidentialType() {
+        return residentialType;
+    }
+
+    public String getReservationName() {
+        return reservationName;
+    }
+
+    public int getBedCount() {
+        return bedCount;
+    }
+
+    public int getBathRoomCount() {
+        return bathRoomCount;
+    }
+
+    public String getOption() {
+        return option;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public double getStar() {
+        return star;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
     public double getLatitude() {
         return latitude;
     }
@@ -121,7 +161,36 @@ public class AccomodationResponseDto {
         return longitude;
     }
 
+    public int getPricePerDay() {
+        return pricePerDay;
+    }
+
     public int getMaxMemberCapacity() {
         return maxMemberCapacity;
+    }
+
+    public boolean isBoundaryPrice(AccomodationRequestDto requestDto) {
+        return (requestDto.getPriceRangeMin() <= this.pricePerDay) &&
+                (this.pricePerDay <= requestDto.getPriceRangeMax());
+    }
+
+    @Override
+    public String toString() {
+        return "AccomodationResponseDto{" +
+                "area='" + area + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", residentialType='" + residentialType + '\'' +
+                ", reservationName='" + reservationName + '\'' +
+                ", maxMemberCapacity=" + maxMemberCapacity +
+                ", bedCount=" + bedCount +
+                ", bathRoomCount=" + bathRoomCount +
+                ", option='" + option + '\'' +
+                ", pricePerDay=" + pricePerDay +
+                ", totalPrice=" + totalPrice +
+                ", star=" + star +
+                ", reviewCount=" + reviewCount +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }
