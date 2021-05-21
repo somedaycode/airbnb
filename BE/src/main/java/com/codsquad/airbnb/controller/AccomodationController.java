@@ -2,6 +2,8 @@ package com.codsquad.airbnb.controller;
 
 import com.codsquad.airbnb.dto.AccomodationRequestDto;
 import com.codsquad.airbnb.service.AccomodationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/accomodation")
 public class AccomodationController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccomodationController.class);
 
     private AccomodationService accomodationService;
 
@@ -22,11 +26,11 @@ public class AccomodationController {
         this.accomodationService = accomodationService;
     }
 
-    @GetMapping("/accomodation")
-    public ResponseEntity getAccomodationList(@RequestParam("check_id" )
-                                                             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
+    @GetMapping("/search")
+    public ResponseEntity getAccomodationList(@RequestParam("check_in")
+                                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
                                               @RequestParam("check_out")
-                                                             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut,
+                                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut,
                                               @RequestParam int adult,
                                               @RequestParam int children,
                                               @RequestParam int infants,
@@ -42,6 +46,8 @@ public class AccomodationController {
                 priceRangeMin, priceRangeMax,
                 northEastLatitude, northEastLongitude,
                 southWestLatitude, southWestLongitude);
+
+        LOGGER.debug("AccomodationRequestDto : {}", requestDto);
 
         return new ResponseEntity(accomodationService.getAccomodationResponseDtoList(requestDto), HttpStatus.OK);
     }
