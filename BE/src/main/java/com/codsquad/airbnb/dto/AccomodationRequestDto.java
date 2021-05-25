@@ -1,7 +1,6 @@
 package com.codsquad.airbnb.dto;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
-
+import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -18,99 +17,31 @@ public class AccomodationRequestDto {
 
     private double northEastLatitude;
     private double northEastLongitude;
-
     private double southWestLatitude;
     private double southWestLongitude;
 
-    public AccomodationRequestDto(LocalDate checkInDate, LocalDate checkOutDate,
+    @ConstructorProperties({"check_in", "check_out", "adults", "children", "infants",
+    "price_range_min", "price_range_max", "ne_lat", "ne_lng", "sw_lat", "sw_lng"})
+    public AccomodationRequestDto(String checkInDate, String checkOutDate,
                                   int adults, int children, int infants,
                                   int priceRangeMin, int priceRangeMax,
                                   double northEastLatitude, double northEastLongitude,
                                   double southWestLatitude, double southWestLongitude) {
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
-        this.adults = adults;
-        this.children = children;
-        this.infants = infants;
-        this.priceRangeMin = priceRangeMin;
-        this.priceRangeMax = priceRangeMax;
-        this.northEastLatitude = northEastLatitude;
-        this.northEastLongitude = northEastLongitude;
-        this.southWestLatitude = southWestLatitude;
-        this.southWestLongitude = southWestLongitude;
-    }
-
-    @JsonSetter("check_in")
-    public void setCheckInDate(String checkInDate) {
         this.checkInDate = parseToLocalDate(checkInDate);
-    }
-
-    @JsonSetter("check_out")
-    public void setCheckOutDate(String checkOutDate) {
         this.checkOutDate = parseToLocalDate(checkOutDate);
-    }
-
-    public void setAdults(int adults) {
         this.adults = adults;
-    }
-
-    public void setChildren(int children) {
         this.children = children;
-    }
-
-    public void setInfants(int infants) {
         this.infants = infants;
-    }
-
-    @JsonSetter("price_range_min")
-    public void setPriceRangeMin(int priceRangeMin) {
         this.priceRangeMin = priceRangeMin;
-    }
-
-    @JsonSetter("price_range_max")
-    public void setPriceRangeMax(int priceRangeMax) {
         this.priceRangeMax = priceRangeMax;
-    }
-
-
-    @JsonSetter("ne_lat")
-    public void setNorthEastLatitude(double northEastLatitude) {
         this.northEastLatitude = northEastLatitude;
-    }
-
-    @JsonSetter("ne_lng")
-    public void setNorthEastLongitude(double northEastLongitude) {
         this.northEastLongitude = northEastLongitude;
-    }
-
-    @JsonSetter("sw_lat")
-    public void setSouthWestLatitude(double southWestLatitude) {
         this.southWestLatitude = southWestLatitude;
-    }
-
-    @JsonSetter("sw_lng")
-    public void setSouthWestLongitude(double southWestLongitude) {
         this.southWestLongitude = southWestLongitude;
     }
 
     private LocalDate parseToLocalDate(String dateAsString) {
         return LocalDate.parse(dateAsString, DateTimeFormatter.ISO_DATE);
-    }
-
-    public double getNorthEastLatitude() {
-        return northEastLatitude;
-    }
-
-    public double getNorthEastLongitude() {
-        return northEastLongitude;
-    }
-
-    public double getSouthWestLatitude() {
-        return southWestLatitude;
-    }
-
-    public double getSouthWestLongitude() {
-        return southWestLongitude;
     }
 
     public int getPriceRangeMin() {
