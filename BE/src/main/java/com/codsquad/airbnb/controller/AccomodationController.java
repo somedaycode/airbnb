@@ -27,28 +27,8 @@ public class AccomodationController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity getAccomodationList(@RequestParam("check_in")
-                                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
-                                              @RequestParam("check_out")
-                                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut,
-                                              @RequestParam int adult,
-                                              @RequestParam int children,
-                                              @RequestParam int infants,
-                                              @RequestParam("price_range_min") int priceRangeMin,
-                                              @RequestParam("price_range_max") int priceRangeMax,
-                                              @RequestParam("ne_lat") double northEastLatitude,
-                                              @RequestParam("ne_lng") double northEastLongitude,
-                                              @RequestParam("sw_lat") double southWestLatitude,
-                                              @RequestParam("sw_lng") double southWestLongitude) {
-
-        AccomodationRequestDto requestDto = new AccomodationRequestDto(checkIn, checkOut,
-                adult, children, infants,
-                priceRangeMin, priceRangeMax,
-                northEastLatitude, northEastLongitude,
-                southWestLatitude, southWestLongitude);
-
+    public ResponseEntity getAccomodationList(AccomodationRequestDto requestDto) {
         LOGGER.debug("AccomodationRequestDto : {}", requestDto);
-
         return new ResponseEntity(accomodationService.getAccomodationResponseDtoList(requestDto), HttpStatus.OK);
     }
 
