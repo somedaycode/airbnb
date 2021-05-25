@@ -51,4 +51,9 @@ public class AccomodationController {
 
         return new ResponseEntity(accomodationService.getAccomodationResponseDtoList(requestDto), HttpStatus.OK);
     }
+
+    @GetMapping("/price")
+    public ResponseEntity getPrices() {
+        return new ResponseEntity(accomodationService.getPrices(), HttpStatus.OK);
+    }
 }
