@@ -129,4 +129,11 @@ public class AccomodationService {
 
         return list;
     }
+
+    public List<Integer> getPrices() {
+        List<AccomodationResponseDto> list = getAccomodationFromDb();
+
+        return list.stream().map(accomodation -> accomodation.getPricePerDay())
+                .collect(Collectors.toList());
+    }
 }
