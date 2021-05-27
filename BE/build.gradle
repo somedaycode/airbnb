@@ -15,6 +15,10 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //Oauth JWT dependency
+    implementation 'com.auth0:java-jwt:3.15.0'
+
 }
 
 test {
