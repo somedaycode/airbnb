@@ -7,6 +7,7 @@ import com.codsquad.airbnb.dto.Code;
 import com.codsquad.airbnb.dto.GithubAccessTokenRequestDto;
 import com.codsquad.airbnb.dto.GithubAccessTokenResponseDto;
 import com.codsquad.airbnb.dto.User;
+import com.codsquad.airbnb.service.OauthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -26,82 +27,29 @@ public class OauthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OauthController.class);
 
-    private final String CLIENT_ID;
-    private final String CLIENT_SECRET;
+    private OauthService oauthService;
 
-    public OauthController(Environment environment) {
-        CLIENT_ID = environment.getProperty("github.client.id");
-        CLIENT_SECRET = environment.getProperty("github.client.secret");
+    public OauthController(OauthService oauthService) {
+        this.oauthService = oauthService;
     }
 
     @GetMapping
     public ResponseEntity auth(String code) {
-        LOGGER.debug("code : {}x", code);
+        LOGGER.debug("code : {}", code);
 
-        GithubAccessTokenResponseDto accessToken = getAccessToken(code)
-                .orElseThrow(() -> new RuntimeException("바디 없음"));
+        GithubAccessTokenResponseDto accessToken = oauthService.getAccessToken(code)
+                .orElseThrow(() -> new RuntimeException("바디가 존재하지 않습니다."));
 
         LOGGER.debug("accessToken : {}", accessToken);
 
-        User user = getUserFromGitHub(accessToken)
-                .orElseThrow(() -> new RuntimeException("놉 바디"));
+        User user = oauthService.getUserFromGitHub(accessToken)
+                .orElseThrow(() -> new RuntimeException("바디가 존재하지 않습니다."));
 
-        String jwt = getJwt(user);
+        String jwt = oauthService.getJwt(user);
 
         LOGGER.debug("user : {}", user);
         LOGGER.debug("jwt : {}", jwt);
 
         return new ResponseEntity(jwt, HttpStatus.OK);
-
-    }
-
-    private String getJwt(User user) {
-        try {
-            Algorithm algorithm = Algorithm.HMAC256("secret");
-
-            return JWT.create()
-                    .withClaim("login", user.getLogin())
-                    .withClaim("name", user.getName())
-                    .withIssuer("jwtTest")
-                    .sign(algorithm);
-
-        } catch (JWTCreationException exception) {
-            throw new RuntimeException(exception);
-        }
-    }
-
-    private Optional<User> getUserFromGitHub(GithubAccessTokenResponseDto accessToken) {
-        String githubUserUri = "https://api.github.com/user";
-
-        LOGGER.debug("accessToken : {}", accessToken.getAccessToken());
-
-        RequestEntity<Void> request = RequestEntity
-                .get(githubUserUri)
-                .header("Accept", "application/json")
-                .header("Authorization", "token " + accessToken.getAccessToken())
-                .build();
-
-        ResponseEntity<User> response = new RestTemplate()
-                .exchange(request, User.class);
-
-        return Optional.ofNullable(response.getBody());
-    }
-
-    private Optional<GithubAccessTokenResponseDto> getAccessToken(String code) {
-        String githubAccessTokenUri = "https://github.com/login/oauth/access_token";
-
-        RequestEntity<GithubAccessTokenRequestDto> request = RequestEntity
-                .post(githubAccessTokenUri)
-                .header("Accept", "application/json")
-                .body(new GithubAccessTokenRequestDto(CLIENT_ID, CLIENT_SECRET, code));
-
-        LOGGER.debug("request : {}", request);
-
-        ResponseEntity<GithubAccessTokenResponseDto> response = new RestTemplate()
-                .exchange(request, GithubAccessTokenResponseDto.class);
-
-        LOGGER.debug("response : {}", response);
-
-        return Optional.ofNullable(response.getBody());
     }
 }
