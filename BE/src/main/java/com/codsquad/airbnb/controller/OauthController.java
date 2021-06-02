@@ -27,12 +27,12 @@ public class OauthController {
     public ResponseEntity auth(String code) {
         LOGGER.debug("code : {}", code);
 
-        GithubAccessTokenResponseDto accessToken = oauthService.getAccessToken(code)
+        GithubAccessTokenResponseDto tokenResponseDto = oauthService.getAccessToken(code)
                 .orElseThrow(() -> new RuntimeException("바디가 존재하지 않습니다."));
 
-        LOGGER.debug("accessToken : {}", accessToken);
+        LOGGER.debug("tokenResponseDto : {}", tokenResponseDto);
 
-        User user = oauthService.getUserFromGitHub(accessToken)
+        User user = oauthService.getUserFromGitHub(tokenResponseDto.getAccessToken())
                 .orElseThrow(() -> new RuntimeException("바디가 존재하지 않습니다."));
 
         String jwt = oauthService.getJwt(user);
