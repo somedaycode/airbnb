@@ -3,6 +3,8 @@ package com.codsquad.airbnb.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.codsquad.airbnb.dto.GithubAccessTokenRequestDto;
 import com.codsquad.airbnb.dto.GithubAccessTokenResponseDto;
 import com.codsquad.airbnb.dto.User;
@@ -29,15 +31,15 @@ public class OauthService {
         CLIENT_SECRET = environment.getProperty("github.client.secret");
     }
 
-    public Optional<User> getUserFromGitHub(GithubAccessTokenResponseDto accessToken) {
+    public Optional<User> getUserFromGitHub(String accessToken) {
         String githubUserUri = "https://api.github.com/user";
 
-        LOGGER.debug("accessToken : {}", accessToken.getAccessToken());
+        LOGGER.debug("accessToken : {}", accessToken);
 
         RequestEntity<Void> request = RequestEntity
                 .get(githubUserUri)
                 .header("Accept", "application/json")
-                .header("Authorization", "token " + accessToken.getAccessToken())
+                .header("Authorization", "token " + accessToken)
                 .build();
 
         ResponseEntity<User> response = new RestTemplate()
@@ -78,4 +80,22 @@ public class OauthService {
             throw new RuntimeException(exception);
         }
     }
+    
+    private DecodedJWT decodeJwt (String incodedJwt) {
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256("secret")).build();
+        DecodedJWT decodedJWT =jwtVerifier.verify(incodedJwt);
+        return decodedJWT;
+    }
+    
+    public Optional<User> getLoginFromEncodedJwt(String incodedJwt) {
+        return getUserFromDecodedJwt(decodeJwt(incodedJwt));
+    }
+
+    private Optional<User> getUserFromDecodedJwt(DecodedJWT decodedJWT) {
+        return Optional.ofNullable(
+                new User(decodedJWT.getClaim("login").asString(),
+                decodedJWT.getClaim("name").asString()));
+    }
+
+
 }
