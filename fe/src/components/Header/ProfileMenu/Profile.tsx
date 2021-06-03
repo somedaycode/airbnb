@@ -41,7 +41,6 @@ const Profile = () => {
         const response = await fetch(
           `http://3.35.178.32:8080/auth?code=${code}`
         );
-        console.log(response);
         const jwt = await response.text();
         localStorage.setItem('jwt', jwt);
         setIsLogin(true);
