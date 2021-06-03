@@ -26,6 +26,7 @@ public class AccomodationRequestDto {
 
     private double northEastLatitude;
     private double northEastLongitude;
+
     private double southWestLatitude;
     private double southWestLongitude;
 
@@ -36,6 +37,7 @@ public class AccomodationRequestDto {
                                   int priceRangeMin, int priceRangeMax,
                                   double northEastLatitude, double northEastLongitude,
                                   double southWestLatitude, double southWestLongitude) {
+                                  
         this.checkInDate = LocalDateUtil.parseToLocalDate(checkInDate);
         this.checkOutDate = LocalDateUtil.parseToLocalDate(checkOutDate);
         this.adults = adults;

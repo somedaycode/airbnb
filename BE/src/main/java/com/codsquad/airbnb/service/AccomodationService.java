@@ -92,5 +92,6 @@ public class AccomodationService {
 
     public List<Integer> getPricesByTravelRange(TravelRangeDto travelRangeDto) {
         return accomodationDao.findPricesByTravelRange(travelRangeDto);
+
     }
 }
