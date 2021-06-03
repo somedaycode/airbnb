@@ -14,6 +14,8 @@ DROP TABLE IF EXISTS `ACCOMODATION`;
 DROP TABLE IF EXISTS `RESERVATION`;
 DROP TABLE IF EXISTS `WISH`;
 
+SET NAMES utf8mb4; ALTER DATABASE airbnb CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
+SHOW VARIABLES WHERE Variable_name LIKE 'character\_set\_%' OR Variable_name LIKE 'collation%';
 -- -----------------------------------------------------
 -- Table `LOCATION`
 -- -----------------------------------------------------
