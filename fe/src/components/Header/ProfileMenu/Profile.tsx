@@ -39,20 +39,20 @@ const Profile = () => {
       if (isLogin) return;
       try {
         const response = await fetch(
-          `http://3.35.3.106:8080/auth?code=${code}`
+          `http://3.35.178.32:8080/auth?code=${code}`
         );
         const jwt = await response.text();
         localStorage.setItem('jwt', jwt);
         setIsLogin(true);
 
-        const homePage = 'http://localhost:3000';
+        const homePage = '/';
         window.history.pushState(null, '', homePage);
       } catch (error) {
         console.log(error);
       }
     };
     getAccessToken();
-  }, [window.location.search]);
+  }, []);
 
   return (
     <ProfileContainer>

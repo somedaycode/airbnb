@@ -62,6 +62,20 @@ const miniSearchBarDate = selector({
   },
 });
 
+const reservationString = selector({
+  key: 'reservationString',
+  get: ({ get }) => {
+    const { checkinDate, checkoutDate } = get(checkDate);
+    let { year, month, day } = checkinDate;
+    const parse = (date: number) =>
+      date > 9 ? String(date) : '0' + String(date);
+
+    return `check_in=${year}-${parse(month)}-${parse(day)}&check_out=${
+      checkoutDate.year
+    }-${parse(checkoutDate.month)}-${parse(checkoutDate.day)}`;
+  },
+});
+
 export {
   calendarDateState,
   isCheckInOut,
@@ -70,4 +84,5 @@ export {
   checkoutNewDate,
   currentHoverDate,
   miniSearchBarDate,
+  reservationString,
 };

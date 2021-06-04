@@ -1,27 +1,46 @@
 import styled from 'styled-components';
 
 import { ReactComponent as Heart } from '@assets/heart.svg';
+import { roomType } from '@components/SearchResult/types';
 
-const RoomInMap = () => {
+const RoomInMap = ({ room }: props) => {
+  const {
+    accomodation_name,
+    area,
+    average_point,
+    image_url,
+    max_member_capacity,
+    options,
+    price_per_day,
+    residential_type,
+    review_count,
+    total_price,
+  } = room;
+  const province = area.split(',')[0];
+  const imageURL = image_url[0].image_url;
+  const optionsDescription = options
+    .reduce((str, currStr) => str + currStr + ', ', '')
+    .slice(0, -2); // 쉼표, 공백 삭제
+
   return (
     <RoomContainer>
       <ImgWrap>
-        <img src="./thumbnail.png" alt="thumbnail" />
+        <img src={imageURL} alt="roomImage" />
       </ImgWrap>
       <Detail>
         <Desc>
           <Icon>
             <Heart />
           </Icon>
-          <span>서초구의 아파트 전체</span>
-          <h6>Spacious and COmfortable cozy house #14</h6>
-          <span>최대인원 3명</span>
-          <span>주방 무선인터넷</span>
+          <span>{`${province}의 ${residential_type}`}</span>
+          <h6>{accomodation_name}</h6>
+          <span>최대인원 {max_member_capacity}명</span>
+          <span>{optionsDescription}</span>
         </Desc>
-        <Review>4.80 후기 127개</Review>
+        <Review>{`${average_point} 후기 ${review_count}개`}</Review>
         <PriceNotice>
-          <span>82953 / 박</span>
-          <span>총액 112512asdfasdf5125</span>
+          <span>{`${price_per_day.toLocaleString()} / 박`}</span>
+          <span>{`총액 ${total_price}원`}</span>
         </PriceNotice>
       </Detail>
     </RoomContainer>
@@ -32,11 +51,26 @@ export default RoomInMap;
 
 const RoomContainer = styled.div`
   display: flex;
+  width: 100%;
+  height: 248px;
+
+  &:not(first-child) {
+    padding: 24px 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 `;
 
 const ImgWrap = styled.div`
   width: 330px;
   height: 200px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const Detail = styled.div`
@@ -78,3 +112,7 @@ const Review = styled.div`
   left: 0;
   position: absolute;
 `;
+
+interface props {
+  room: roomType;
+}
