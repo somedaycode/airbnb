@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 
 import { priceRange, selectedPrice } from '@recoil/atoms/price';
-
-import { testPrices } from './testPrice';
 
 interface positionY {
   value: number;
@@ -34,7 +32,7 @@ const Graph = ({ priceContents }: any) => {
 
   const prices: number[] = [...priceContents];
   const { minWidth, minHeight, width, height } = viewBoxData;
-  const sortedPrice = testPrices.sort((a, b) => a - b).filter((n) => n !== 0);
+  const sortedPrice = prices.sort((a, b) => a - b).filter((n) => n !== 0);
   const maxPrice = 1000000;
 
   const getPriceRangeCount = (priceList: number[]) => {
@@ -54,17 +52,23 @@ const Graph = ({ priceContents }: any) => {
     return priceSet;
   };
 
-  const getPointPosition = ({ value, maxYcount }: positionY): number => {
-    return Number(height) - Math.ceil((value / maxYcount) * 100);
-  };
+  const getPointPosition = useCallback(
+    ({ value, maxYcount }: positionY): number => {
+      return Number(height) - Math.ceil((value / maxYcount) * 100);
+    },
+    [height]
+  );
 
-  const getXAxis = ({ key, maxXcount }: positionX) => {
-    return maxXcount === 0
-      ? 0
-      : `${Math.ceil((Number(key) / maxXcount) * Number(width))}`;
-  };
+  const getXAxis = useCallback(
+    ({ key, maxXcount }: positionX) => {
+      return maxXcount === 0
+        ? 0
+        : `${Math.ceil((Number(key) / maxXcount) * Number(width))}`;
+    },
+    [width]
+  );
 
-  const getMaxCount = (priceSet: any) => {
+  const getMaxCount = useCallback((priceSet: any) => {
     let maxYcount = 0;
     let maxXcount = 0;
     for (const [key, value] of Object.entries(priceSet)) {
@@ -73,20 +77,23 @@ const Graph = ({ priceContents }: any) => {
       maxYcount = Math.max(maxYcount, value);
     }
     return { maxXcount, maxYcount };
-  };
+  }, []);
 
-  const getChartPoints = (priceList: any) => {
-    let points = '';
-    const priceSet = getPriceRangeCount(priceList);
-    const { maxXcount, maxYcount } = getMaxCount(priceSet);
-    for (const [key, value] of Object.entries(priceSet)) {
-      if (typeof value !== 'number') break;
-      const positionY = getPointPosition({ value, maxYcount });
-      const xAxis = getXAxis({ key, maxXcount });
-      points += `${xAxis}, ${positionY} `;
-    }
-    return points;
-  };
+  const getChartPoints = useCallback(
+    (priceList: any) => {
+      let points = '';
+      const priceSet = getPriceRangeCount(priceList);
+      const { maxXcount, maxYcount } = getMaxCount(priceSet);
+      for (const [key, value] of Object.entries(priceSet)) {
+        if (typeof value !== 'number') break;
+        const positionY = getPointPosition({ value, maxYcount });
+        const xAxis = getXAxis({ key, maxXcount });
+        points += `${xAxis}, ${positionY} `;
+      }
+      return points;
+    },
+    [getMaxCount, getPointPosition, getXAxis]
+  );
 
   const getSelectedLine = (pricesSelected: number[]) => {
     if (pricesSelected.length === 0) return [];
@@ -151,6 +158,7 @@ const Graph = ({ priceContents }: any) => {
       (price) => MIN_PRICE < price && price < MAX_PRICE
     );
     setPriceSelectedByUser(newSelectPriceList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sliderPriceRange]);
 
   const chartPriceList = getChartPoints(sortedPrice);
