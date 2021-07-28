@@ -12,7 +12,8 @@ const Map = () => {
   const [map, setMap] = useState<any>(null);
   const mapContainer = useRef<HTMLElement>(null);
   const { state, contents } = useRecoilValueLoadable(accomodationList);
-  const mapLatLng = { lat: 37.57992249446141, lng: 127.05564290690467 };
+  const defaultLocation = { lat: 37.57992249446141, lng: 127.05564290690467 };
+  const mapLatLng = defaultLocation;
 
   const [, setMapBounds] = useState<mapBound>({
     ne_latitude: 0,
@@ -29,7 +30,7 @@ const Map = () => {
       return rooms.map((room: roomType) => {
         return {
           content: `<div class="custom-Overlay">
-            <span>${room.accomodation_name}</span><span>${room.total_price}</span>
+            <span>${room.total_price}</span>
           </div>`,
           latLng: new kakao.maps.LatLng(room.latitude, room.longitude),
         };
@@ -97,7 +98,8 @@ const MapWrap = styled.section`
     flex-direction: column;
     width: auto;
     height: auto;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: bold;
     background: #fff;
   }
 `;
